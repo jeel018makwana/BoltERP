@@ -7,6 +7,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = "__all__"
+        read_only_fields = ["created_by"]
 
     def validate(self, attrs):
         payment_type = attrs.get("payment_type")

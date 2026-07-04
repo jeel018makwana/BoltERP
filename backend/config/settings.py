@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'dashboard',
     'drf_spectacular',
     'company',
+    'logs',
 ]
 
 MIDDLEWARE = [
@@ -187,6 +188,9 @@ REST_FRAMEWORK = {
     ),
 
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
+    "EXCEPTION_HANDLER":
+        "common.exceptions.custom_exception_handler",
 
 }
 

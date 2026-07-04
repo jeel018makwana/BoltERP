@@ -9,6 +9,7 @@ from .serializers import (
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .filters import ProductFilter
+from logs.utils import log_activity
 
 class ProductViewSet(viewsets.ModelViewSet):
 
@@ -47,6 +48,34 @@ class ProductViewSet(viewsets.ModelViewSet):
         "name",
     ]
 
+    def perform_create(self, serializer):
+        product = serializer.save()
+
+        log_activity(
+            user=self.request.user,
+            action = "CREATE",
+            description =f"Created product: {product.name}",
+        )
+
+    def perform_update(self, serializer):
+        product = serializer.save()
+
+        log_activity(
+            user=self.request.user,
+            action="UPDATE",
+            module="Products",
+            description=f"Updated product: {product.name}",
+        )
+
+    def perform_destroy(self, instance):
+        log_activity(
+            user=self.request.user,
+            action="DELETE",
+            module="Products",
+            description=f"Deleted products: {instance.name}",
+        )
+        instance.delete()
+
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -55,13 +84,4 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class BrandViewSet(viewsets.ModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
-    permission_classes = [IsAuthenticated]
-
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.select_related(
-        "category",
-        "brand",
-    ).all()
-
-    serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]

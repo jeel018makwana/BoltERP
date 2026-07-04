@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
@@ -8,7 +7,13 @@ from .serializers import (UserSerializer, LoginSerializer, EmployeeSerializer,)
 from rest_framework.generics import ListCreateAPIView
 from .permissions import IsAdminUserRole
 from .models import User
+from drf_spectacular.utils import extend_schema
+from logs.utils import log_activity
 
+@extend_schema(
+    responses={200: UserSerializer},
+    tags=["Authentication"],
+)
 class ProfileAPIView(APIView):
     """
     Returns the currently logged-in user's profile.
@@ -22,7 +27,12 @@ class ProfileAPIView(APIView):
             data=serializer.data,
             message="Profile fetched successfully."
         )
-    
+
+@extend_schema(
+    request = LoginSerializer,
+    responses={200: UserSerializer},
+    tags=["Authentication"],
+)  
 class LoginAPIView(APIView):
     """
     Custom Login API
@@ -40,6 +50,13 @@ class LoginAPIView(APIView):
 
         refresh = RefreshToken.for_user(user)
 
+        log_activity(
+            user=user,
+            action="LOGIN",
+            module="Authentication",
+            description=f"{user.username} logged in.",
+        )
+
         user_data = UserSerializer(user).data
 
         return success_response(
@@ -53,7 +70,13 @@ class LoginAPIView(APIView):
             },
             status_code=status.HTTP_200_OK,
         )
-    
+
+
+@extend_schema(
+    request=EmployeeSerializer,
+    responses={200: EmployeeSerializer},
+    tags=["Employees"],
+)
 class EmployeeListCreateAPIView(ListCreateAPIView):
     """
     Admin can view all employees and create new employees.

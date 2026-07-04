@@ -8,7 +8,12 @@ from products.models import Product
 from payments.models import Payment
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper
 from sales.models import SaleItem
+from drf_spectacular.utils import extend_schema
 
+
+@extend_schema(
+    responses={200: dict}
+)
 class InventoryReportAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -36,6 +41,9 @@ class InventoryReportAPIView(APIView):
 
         return Response(products)
     
+@extend_schema(
+    responses={200: dict}
+)
 class SalesReportAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -74,6 +82,9 @@ class SalesReportAPIView(APIView):
             "results": list(data),
         })
     
+@extend_schema(
+    responses={200: dict}
+) 
 class PurchaseReportAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -111,7 +122,10 @@ class PurchaseReportAPIView(APIView):
             "count": purchases.count(),
             "results": list(data),
         })
-    
+
+@extend_schema(
+    responses={200: dict}
+)  
 class PaymentReportAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -156,6 +170,10 @@ class PaymentReportAPIView(APIView):
             "count": payments.count(),
             "results": list(data),
         })
+    
+@extend_schema(
+    responses={200: dict}
+)
 class ProfitReportAPIView(APIView):
         
         permission_classes = [IsAuthenticated]

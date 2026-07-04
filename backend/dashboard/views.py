@@ -1,4 +1,3 @@
-from django.db.models import Sum
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,8 +8,27 @@ from suppliers.models import Supplier
 from purchases.models import Purchase
 from sales.models import Sale
 from payments.models import Payment
+from drf_spectacular.utils import extend_schema
 
 
+@extend_schema(
+    responses={
+        200: {
+            "type": "object",
+            "properties": {
+                "total_products": {"type": "integer"},
+                "total_customers": {"type": "integer"},
+                "total_suppliers": {"type": "integer"},
+                "total_sales": {"type": "number"},
+                "total_purchases": {"type": "number"},
+                "customer_payments": {"type": "number"},
+                "supplier_payments": {"type": "number"},
+                "current_inventory": {"type": "number"},
+                "low_stock_products": {"type": "integer"},
+            }
+        }
+    }
+)
 class DashboardAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
