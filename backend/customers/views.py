@@ -1,5 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from .models import Customer
 from .serializers import CustomerSerializer
@@ -7,6 +9,35 @@ from .serializers import CustomerSerializer
 
 class CustomerViewSet(viewsets.ModelViewSet):
 
-    queryset = Customer.objects.all()
+    queryset = Customer.objects.all().order_by("-id")
+
     serializer_class = CustomerSerializer
+
     permission_classes = [IsAuthenticated]
+
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+
+    search_fields = [
+        "customer_code",
+        "name",
+        "company_name",
+        "phone",
+        "gst_number",
+    ]
+
+    filterset_fields = [
+        "is_active",
+    ]
+
+    ordering_fields = [
+        "id",
+        "name",
+        "opening_balance",
+        "customer_code",
+    ]
+
+    ordering = ["-id"]
