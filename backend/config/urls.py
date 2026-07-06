@@ -59,6 +59,7 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
     ),
+    
 
     path(
         "api/redoc/",
@@ -66,6 +67,10 @@ urlpatterns = [
         name="redoc",
     ),
     path("api/v1/customers/", include("customers.urls")),
+    path(
+        "api/v1/suppliers/",
+        include("suppliers.urls"),
+    ),
 ]
 
 if settings.DEBUG:

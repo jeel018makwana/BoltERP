@@ -5,6 +5,7 @@ import NotFound from "@/pages/Notfound";
 import LoginPage from "@/features/auth/pages/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
 import CustomersPage from "@/features/customers/pages/CustomersPage";
+import SuppliersPage from "@/features/suppliers/pages/SuppliersPage";
 
 export default function AppRouter() {
     return(
@@ -18,6 +19,7 @@ export default function AppRouter() {
                 <Route path="/login" element={<LoginPage />}/>
                 <Route path="*" element={<NotFound />}/>
                 <Route path="/customers" element={<CustomersPage />} />
+                <Route path="/suppliers" element={<SuppliersPage />} />
             </Routes>
         </BrowserRouter>
     );
